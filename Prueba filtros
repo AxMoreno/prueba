@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 21 07:40:34 2020
+
+@author: Alexander
+"""
+# Improtar las librerias
+import numpy as np
+import matplotlib.pyplot as plt
+import testset as sigs 
+from scipy.fftpack import fft,ifft
+from scipy import signal
+from scipy.signal import filtfilt
+from scipy.fftpack import fft,ifft, fftshift
+
+
+#----------------------------------Graficar la señal
+n_1=len(sig_input_sensor)
+plt.plot(sig_input_sensor, color='blue', label="señal")
+plt.show()
+
+#-------------------------------------------Normalizando la señal de entrada
+signal_prueba_Dataset=np.zeros(len(sigs.prueba_Dataset))
+for i,num in enumerate (sigs.prueba_Dataset):
+    signal_prueba_Dataset[i]=float(sigs.prueba_Dataset[i]/max(sigs.prueba_Dataset)) 
+    
+#grafica normalizada
+plt.title('Señal Normalizada prueba_Dataset')
+plt.plot(signal_prueba_Dataset,label='Señal prueba_Dataset ')
+plt.show()  
+
+# fft transformation to detect frequency spectral for each time series signal
+freq_domain_signal = fft(sigs.prueba_Dataset)
+plt.stem(freq_domain_signal)
+plt.xlim(0,1500)
+#plt.ylim(0,8000)
+plt.show() 
+
+plt.plot(sigs.prueba_Dataset)
+freq_domain_signal = fft(sigs.prueba_Dataset)
+plt.stem(freq_domain_signal)
+plt.xlim(0,400)
+#plt.ylim(0,14000)
+plt.show()
+
+freq_domain_signal=np.array(freq_domain_signal)
+
+#-------------------------------------------------Filtro pasa bajo
+lowpass_coef2=signal.firwin(200,8,pass_zero=True,nyq=101, window='blackman')
+plt.plot(lowpass_coef2)
+plt.show()
+output2=signal.convolve(prueba_Dataset,lowpass_coef2, mode='same')
+f,plt_arr=plt.subplots(2,sharex=True)
+f.suptitle("FILTRO POR VENTANAS  ")
+plt_arr[0].plot(signal_prueba_Dataset,color='purple')
+plt_arr[0].set_title("Señal de entrada")
+plt_arr[1].plot(output2,color='blue')
+plt_arr[1].set_title("Señal filtrada PASA BAJOS")
+plt.show()
